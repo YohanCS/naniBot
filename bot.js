@@ -1,4 +1,4 @@
-import { buildTable } from "./stringTable.js"
+var stringTable = require('./stringTable.js')
 
 
 var Discord = require('discord.io');
@@ -29,14 +29,16 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     var args = message.substring(1).split(' '); //split into array
     var cmd = args[0]; //the command
 
-    console.log(args);
     switch(cmd) {
       // !ping
       case 'help':
         console.log('help'); //what command was called
         bot.sendMessage({
           to: channelID,
-          message: 'Commands(starts with !): \n \'op\' to get link of op.gg of a username'
+          //backticks to create multi-line string
+          message: `Commands(starts with !): 'op' to get link of op.gg of a username
+          build to add a word to a string others have added to
+          buildClear to clear the build string`
         });
         break;
       case 'op':
@@ -54,12 +56,13 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             message: "Incorrect usage, do !op [username]"
           });
         }
+        break;
       case 'build':
         console.log('build');
         //correct arg length is 2
         if(args.length == 2) {
           let word = args[1];
-          let newString = buildTable(word);
+          let newString = stringTable.buildTable(word);
           newString = newString.join(' '); //since it's returned as an array
           console.log(newString);
           bot.sendMessage({
@@ -73,6 +76,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             message: "Incorrect usage, do !build [word]"
           });
         }
+        break;
+      case 'buildClear':
+        console.log('buildClear');
+        stringTable.clearTable();
+        break;
 
     } //ends switch statement
     //now reset args
