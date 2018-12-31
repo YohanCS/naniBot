@@ -1,7 +1,7 @@
 var stringTable = require('./stringTable.js')
 
 
-var Discord = require('discord.io');
+var Discord = require('discord.js');
 var logger = require('winston');
 var auth = require('./auth.json');
 
@@ -13,49 +13,38 @@ logger.add(new logger.transports.Console, {
 logger.level = 'debug';
 
 //Initialize discord bot
-var bot = new Discord.Client({
-  token: auth.token,
-  autorun: true
+var bot = new Discord.Client();
+//log in bot
+bot.login(auth.token);
+
+bot.on('ready', () => {
+  console.log(`Logged in as ${bot.user.tag}!`);
 });
-bot.on('ready', function (evt) {
-  logger.info('Connected');
-  logger.info('Logged in as: ');
-  logger.info(bot.username + '-(' + bot.id + ')');
-});
-bot.on('message', function (user, userID, channelID, message, evt) {
+
+bot.on('message', msg => {
   //Our bot will need to know if it will execute a command
   //it will listen to msgs that start with !
-  if (message.substring(0, 1) == '!') {
-    var args = message.substring(1).split(' '); //split into array
+  if (msg.content.substring(0, 1) == '!') {
+    var args = msg.content.substring(1).split(' '); //split into array
     var cmd = args[0]; //the command
 
     switch(cmd) {
       // !ping
       case 'help':
         console.log('help'); //what command was called
-        bot.sendMessage({
-          to: channelID,
-          //backticks to create multi-line string
-          message: `Commands(starts with !):
+        msg.reply(`Commands(starts with !):
           op to get link of op.gg of a username
           build to add a word to a string others have added to
-          buildClear to clear the build string`
-        });
+          buildClear to clear the build string`);
         break;
       case 'op':
         console.log('op'); //see what command is called
         //error check if args is correct
         if(args.length == 2) {
-          bot.sendMessage({
-            to: channelID,
-            message: "https://na.op.gg/summoner/userName=" + args[1]
-          });
+          msg.channel.send("https://na.op.gg/summoner/userName=" + args[1]);
         }
         else {
-          bot.sendMessage({
-            to: channelID,
-            message: "Incorrect usage, do !op [username]"
-          });
+          msg.reply("Incorrect usage, do !op [username]");
         }
         break;
       case 'build':
@@ -66,16 +55,10 @@ bot.on('message', function (user, userID, channelID, message, evt) {
           let newString = stringTable.buildTable(word);
           newString = newString.join(' '); //since it's returned as an array
           console.log(newString);
-          bot.sendMessage({
-            to: channelID,
-            message: newString
-          });
+          msg.channel.send(newString);
         }
         else {
-          bot.sendMessage({
-            to: channelID,
-            message: "Incorrect usage, do !build [word]"
-          });
+          msg.reply("Incorrect usage, do !build [word]")
         }
         break;
       case 'buildClear':
