@@ -8,7 +8,10 @@ exports.buildTable = function(s) {
   //to said array
   data["bigString"].push(s);
   writeData(data);
-  return data["bigString"];
+  if(data["bigString"].length > 1999) {
+    clearTable();
+  }
+  return data["bigString"]; //builds table then returns
 }
 
 function writeData(data) {

@@ -35,7 +35,8 @@ bot.on('message', msg => {
         msg.reply(`Commands(starts with !):
           op to get link of op.gg of a username
           build to add a word to a string others have added to
-          buildClear to clear the build string`);
+          buildClear to clear the build string
+          joined to see date a user has joined`);
         break;
       case 'op':
         console.log('op'); //see what command is called
@@ -50,20 +51,32 @@ bot.on('message', msg => {
       case 'build':
         console.log('build');
         //correct arg length is 2
-        if(args.length == 2) {
-          let word = args[1];
+        if(args.length == 1) {
+          msg.reply("Incorrect usage, do !build [word]+")
+        }
+        else {
+          let word = args.slice(1);
+          word = word.join(' ');
           let newString = stringTable.buildTable(word);
           newString = newString.join(' '); //since it's returned as an array
           console.log(newString);
           msg.channel.send(newString);
         }
-        else {
-          msg.reply("Incorrect usage, do !build [word]")
-        }
         break;
       case 'buildClear':
         console.log('buildClear');
         stringTable.clearTable();
+        break;
+      case 'joined':
+        console.log('joined');
+        let mention = msg.mentions.members.first();
+        //find mention
+        if(args.length < 2 || mention == null) {
+          msg.channel.send("need to mention a user")
+          break;
+        }
+        msg.channel.send(mention.joinedAt.toString().match(/.*0/));
+        console.log("finish joined");
         break;
 
     } //ends switch statement
