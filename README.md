@@ -1,7 +1,6 @@
 # naniBot
 
-9 commands so far
-For instance:
+9 commands so far:
 
 !help to obtain information about the other commands and usage. 
 
@@ -15,3 +14,5 @@ everyone can build on.
 !odds @User [numberOutOf] based off of What are the Odds;
 
 have the bot message both users for a number and compare it,
+
+Invite to server using https://discordapp.com/oauth2/authorize?&client_id=528876318750801920&scope=bot&permissions=0
